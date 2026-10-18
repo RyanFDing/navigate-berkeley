@@ -139,7 +139,8 @@ class PlanResponse(BaseModel):
 | Step | State | Notes |
 |---|---|---|
 | Design mockups | ✅ done | Canvas: Navigate Berkeley (9 phone screens + web) |
-| 1.1 | ⏭ next | |
+| 1.1 | ✅ done | `./otp/fetch_data.sh` → `otp/data/ac-gtfs.zip` (feed valid 2026-08-09 → 2027-04-03) + `east-bay.osm.pbf` (34 MB). Needs `osmium-tool`. |
+| 1.2 | ⏭ next | |
 
 ---
 
@@ -156,11 +157,12 @@ class PlanResponse(BaseModel):
 | 2026-10-17 | Preferences are soft scoring penalties, ≤10-word labels | Nudges, not hard rules |
 | 2026-10-17 | Scope: trips that start or end in Berkeley (SF/airports later via BART) | Built for Berkeley students |
 | 2026-10-17 | Design: Geist + Geist Mono, near-white, black accents, color only for modes | Clean, demo-ready look |
+| 2026-10-17 | OSM = Geofabrik NorCal clipped with osmium to bbox -122.42,37.70,-122.10,38.02 (Richmond–San Leandro, shore–Orinda) | No ready-made East Bay extract; clipped file is small (34 MB) |
 
 ---
 
 ## Open questions
 - Does Bear Transit publish a GTFS feed? (Ask Berkeley Parking & Transportation.)
-- What are 511's rate limits per token? (I believe it's around 60 requests/hour by default — confirm when signing up.)
-- How much memory does OTP need for the East Bay extract? (Guess: 2–4 GB.) This decides hosting.
+- ~~What are 511's rate limits per token?~~ Confirmed: `RateLimit-Limit: 60` (per hour, per token). Polling every 30–60 s for step 1.3 would use it all or exceed it. Before 1.3: ask 511 for a higher limit, or poll only TripUpdates every 90–120 s?
+- How much memory does OTP need for the East Bay extract? (Guess: 2–4 GB; extract is only 34 MB, so likely ~2 GB.) This decides hosting.
 - Which LLM provider and model for intent parsing, and the cost per request?
